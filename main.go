@@ -1,26 +1,15 @@
 package main
 
 import (
-	"encoding/json"
-	"net/http"
-	"time"
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	s := &http.Server{
-		Addr:           ":8080",
-		ReadTimeout:    10 * time.Second,
-		WriteTimeout:   10 * time.Second,
-		MaxHeaderBytes: 1 << 20,
-	}
-
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		responseValue := map[string]any{"Message": "Hello, World"}
-		response, _ := json.Marshal(responseValue)
-		w.Write(response)
+	r := gin.Default()
+	r.GET("/", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "Hello this is welcome to go server",
+		})
 	})
-
-	if err := s.ListenAndServe(); err != nil {
-		panic(err)
-	}
+	r.Run()
 }
