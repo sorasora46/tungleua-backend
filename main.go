@@ -1,28 +1,13 @@
 package main
 
-import (
-	"net/http"
-
-	"github.com/gin-gonic/gin"
-)
+import "github.com/gofiber/fiber/v2"
 
 func main() {
-	r := gin.Default()
-	r.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "Hello this is welcome to go server",
-		})
-	})
-	r.Run()
-}
+  app := fiber.New()
 
-func setupRouter() *gin.Engine {
-	r := gin.Default()
-	// r.GET("/ping", func(c *gin.Context) {
-	// 	c.JSON(http.StatusOK, gin.H{
-	// 		"message": "pong",
-	// 	})
-	// })
-	// เอาไว้เขียน end point
-	return r
+  app.Get("/", func(c *fiber.Ctx) error {
+    return c.SendString("Hello, World!")
+  })
+
+  app.Listen(":3000")
 }
