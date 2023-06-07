@@ -1,5 +1,6 @@
 module github.com/sorasora46/Tungleua-backend
 
+
 go 1.20
 
 require (
