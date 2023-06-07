@@ -1,28 +1,28 @@
 package main
 
 import (
-	"net/http"
+	"fmt"
+	"log"
 
-	"github.com/gin-gonic/gin"
+	"github.com/gofiber/fiber/v2"
+	"github.com/sorasora46/Tungleua-backend/app/models"
+	"github.com/sorasora46/Tungleua-backend/app/utils"
+	"github.com/sorasora46/Tungleua-backend/config"
 )
 
 func main() {
-	r := gin.Default()
-	r.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "Hello this is welcome to go server",
-		})
-	})
-	r.Run()
-}
+	config.LoadConfig()
 
-func setupRouter() *gin.Engine {
-	r := gin.Default()
-	// r.GET("/ping", func(c *gin.Context) {
-	// 	c.JSON(http.StatusOK, gin.H{
-	// 		"message": "pong",
-	// 	})
-	// })
-	// เอาไว้เขียน end point
-	return r
+	utils.ConnectDatabase()
+
+	app := fiber.New()
+
+	app.Get("/", func(c *fiber.Ctx) error {
+		user := new(models.User)
+		utils.DB.First(&user)
+		fmt.Println(user)
+		return c.JSON(user)
+	})
+
+	log.Fatal(app.Listen(":3000"))
 }
