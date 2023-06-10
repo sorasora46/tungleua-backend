@@ -8,6 +8,22 @@ import (
 	"github.com/sorasora46/Tungleua-backend/app/repositories"
 )
 
+func UpdateUserById(c *fiber.Ctx) error {
+	userID := c.Params("id")
+
+	updates := make(map[string]interface{})
+	if err := c.BodyParser(&updates); err != nil {
+		return err
+	}
+
+	result, err_result := repositories.UpdateUserById(userID, updates)
+	if err_result != nil {
+		return err_result
+	}
+
+	return c.SendString(result)
+}
+
 func GetUserById(c *fiber.Ctx) error {
 	userID := c.Params("id")
 
