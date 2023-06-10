@@ -7,6 +7,14 @@ import (
 	"github.com/sorasora46/Tungleua-backend/app/utils"
 )
 
+func UpdateUserById(userID string, updates map[string]interface{}) (string, error) {
+	result := utils.DB.Model(&models.User{}).Where("id = ?", userID).Updates(updates)
+	if result.Error != nil {
+		return "failed", result.Error
+	}
+	return "success", nil
+}
+
 func GetUserById(userID string) (*models.User, error) {
 	user := new(models.User)
 	result := utils.DB.Find(user, "id = ?", userID)
