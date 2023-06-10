@@ -1,7 +1,7 @@
 package models
 
 type User struct {
-	ID    int    `gorm:"column:id;primaryKey"`
+	ID    string `gorm:"column:id;primaryKey"`
 	Phone string `gorm:"column:phone;not null"`
 	Image []byte `gorm:"column:image"`
 	Email string `gorm:"column:email;not null"`

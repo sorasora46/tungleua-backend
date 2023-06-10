@@ -3,8 +3,9 @@ package utils
 import (
 	"log"
 
-	"github.com/sorasora46/Tungleua-backend/config"
+	"github.com/sorasora46/Tungleua-backend/app/models"
 
+	"github.com/sorasora46/Tungleua-backend/config"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -20,6 +21,6 @@ func ConnectDatabase() error {
 	}
 
 	DB = db
-
+	db.AutoMigrate(&models.User{})
 	return nil
 }
