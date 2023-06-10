@@ -7,7 +7,9 @@ import (
 )
 
 type Config struct {
-	DatabaseDSN string
+	DatabaseDSN        string
+	AccessTokenSecret  string
+	RefreshTokenSecret string
 }
 
 var AppConfig *Config
@@ -23,11 +25,20 @@ func LoadConfig() {
 	}
 
 	AppConfig = &Config{
-		DatabaseDSN: viper.GetString("DATABASE_DSN"),
-		// Initialize other configuration properties here
+		DatabaseDSN:        viper.GetString("DATABASE_DSN"),
+		AccessTokenSecret:  viper.GetString("ACCESS_TOKEN_SECRET"),
+		RefreshTokenSecret: viper.GetString("REFRESH_TOKEN_SECRET"),
 	}
 }
 
 func GetDatabaseDSN() string {
 	return AppConfig.DatabaseDSN
+}
+
+func GetAccessTokenSecret() string {
+	return AppConfig.AccessTokenSecret
+}
+
+func GetRefreshTokenSecret() string {
+	return AppConfig.RefreshTokenSecret
 }

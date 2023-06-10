@@ -23,3 +23,5 @@ go.work
 
 #Enviorment file
 .env
+
+firebase-config.json
