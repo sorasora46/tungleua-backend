@@ -14,7 +14,9 @@ func main() {
 
 	utils.ConnectDatabase()
 
-	app := fiber.New()
+	app := fiber.New(fiber.Config{
+		StrictRouting: true,
+	})
 
 	routes.SetupRoutes(app)
 
