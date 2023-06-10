@@ -9,7 +9,9 @@ func SetupRoutes(app *fiber.App) {
 	api := app.Group("/api")
 
 	user := api.Group("/users")
-	user.Get("/:id", handlers.GetUserById)
+	user.Get("/find-by-id/:id", handlers.GetUserById)
+	user.Get("/exist", handlers.CheckIsUserExist)
+	user.Get("/find-by-email", handlers.GetUserByEmail)
 	user.Post("/", handlers.CreateUser)
 
 	auth := api.Group("/auth")
