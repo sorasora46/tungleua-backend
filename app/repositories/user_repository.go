@@ -15,6 +15,35 @@ func GetUserById(userID string) (*models.User, error) {
 	return user, nil
 }
 
+func GetUserByEmail(email string) (*models.User, error) {
+	user := new(models.User)
+	result := utils.DB.Find(user, "email = ?", email)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return user, nil
+}
+
+func GetUserByPhone(phone string) (*models.User, error) {
+	user := new(models.User)
+	result := utils.DB.Find(user, "phone = ?", phone)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return user, nil
+}
+
+func GetUserByName(name string) (*models.User, error) {
+	user := new(models.User)
+	result := utils.DB.Find(user, "name = ?", name)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return user, nil
+}
 // func CreateUser(user *models.User, user_password *models.Password) error {
 func CreateUser(user *models.User) error {
 	user_result := utils.DB.Create(user)
