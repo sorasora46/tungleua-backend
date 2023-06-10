@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
@@ -32,8 +31,6 @@ func GetUserById(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-
-	fmt.Println(user.Image)
 
 	return c.JSON(map[string]any{
 		"id":      user.ID,
