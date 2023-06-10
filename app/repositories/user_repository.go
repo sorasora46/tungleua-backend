@@ -1,6 +1,8 @@
 package repositories
 
 import (
+	"fmt"
+
 	"github.com/sorasora46/Tungleua-backend/app/models"
 	"github.com/sorasora46/Tungleua-backend/app/utils"
 )
@@ -44,6 +46,18 @@ func GetUserByName(name string) (*models.User, error) {
 
 	return user, nil
 }
+
+func CheckIsUserExist(user *models.User) (bool, error) {
+	result := utils.DB.Where("email = ?", user.Email).Or("name = ?", user.Name).Or("phone = ?", user.Phone).First(user)
+	if result.Error != nil {
+		return false, result.Error
+	}
+
+	fmt.Println(user)
+
+	return user.ID != "", nil
+}
+
 // func CreateUser(user *models.User, user_password *models.Password) error {
 func CreateUser(user *models.User) error {
 	user_result := utils.DB.Create(user)
