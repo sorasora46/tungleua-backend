@@ -1,8 +1,9 @@
 package handlers
 
 import (
+	"strings"
+
 	"github.com/gofiber/fiber/v2"
-	"github.com/google/uuid"
 	"github.com/sorasora46/Tungleua-backend/app/models"
 	"github.com/sorasora46/Tungleua-backend/app/repositories"
 )
@@ -15,11 +16,52 @@ func GetUserById(c *fiber.Ctx) error {
 		return err
 	}
 
-	return c.JSON(user)
+	return c.JSON(map[string]any{
+		"id":      user.ID,
+		"email":   user.Email,
+		"name":    user.Name,
+		"image":   user.Image,
+		"is_shop": user.IsShop,
+		"phone":   user.Phone,
+	})
+}
+
+func GetUserByEmail(c *fiber.Ctx) error {
+	email := c.Query("email")
+
+	user, err := repositories.GetUserByEmail(email)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(map[string]any{
+		"id":      user.ID,
+		"email":   user.Email,
+		"name":    user.Name,
+		"image":   user.Image,
+		"is_shop": user.IsShop,
+		"phone":   user.Phone,
+	})
+}
+
+func CheckIsUserExist(c *fiber.Ctx) error {
+	req := new(models.User)
+	if err := c.BodyParser(&req); err != nil {
+		return err
+	}
+
+	isFound, err := repositories.CheckIsUserExist(req)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(map[string]bool{
+		"isFound": isFound,
+	})
 }
 
 func CreateUser(c *fiber.Ctx) error {
-	id := uuid.New().String()
+	// id := uuid.New().String()
 
 	// Get request body
 	// req := new(models.UserWithPassword)
@@ -31,7 +73,9 @@ func CreateUser(c *fiber.Ctx) error {
 	if err := c.BodyParser(&req); err != nil {
 		return err
 	}
-	req.ID = id
+	req.Name = strings.ToLower(req.Name)
+	req.Email = strings.ToLower(req.Email)
+	// req.ID = id
 
 	// Hashing password
 	// user_pass := new(models.Password)
