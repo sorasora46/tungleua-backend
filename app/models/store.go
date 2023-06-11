@@ -9,4 +9,5 @@ type Store struct {
 	Description string  `gorm:"column:description;not null"`
 	Latitude    float64 `gorm:"column:latitude;not null"`
 	Longitude   float64 `gorm:"column:longitude;not null"`
+	UserID      string  `gorm:"column:user_id;not null;"`
 }

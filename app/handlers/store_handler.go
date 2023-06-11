@@ -52,6 +52,7 @@ func CreateStore(c *fiber.Ctx) error {
 		Description: req["description"].(string),
 		Latitude:    req["latitude"].(float64),
 		Longitude:   req["longitude"].(float64),
+		UserID:      req["user_id"].(string),
 	}
 
 	imagesInterface := req["images"].([]interface{})
