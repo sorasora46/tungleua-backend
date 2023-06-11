@@ -22,7 +22,5 @@ func ConnectDatabase() error {
 
 	DB = db
 	db.AutoMigrate(&models.User{})
-	db.AutoMigrate(&models.LoginRequest{})
-	db.AutoMigrate(&models.RegisterRequest{})
 	return nil
 }
