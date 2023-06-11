@@ -18,4 +18,12 @@ func SetupRoutes(app *fiber.App) {
 	auth := api.Group("/auth")
 	auth.Post("/login", handlers.Login)
 	// auth.Post("/refresh-token", handlers.RefreshToken)
+
+	store := api.Group("/stores")
+	store.Get("/find-by-id/:id", handlers.GetStoreById)
+	// store.Get("/images/:id")
+	// store.Get("/exist")
+	// store.Put("/update/:id")
+	store.Post("/", handlers.CreateStore)
+	// store.Delete("/delete/:id")
 }
