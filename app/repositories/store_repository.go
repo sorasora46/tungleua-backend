@@ -35,6 +35,11 @@ func CreateStore(store *models.Store, images [][]byte) error {
 		}
 	}
 
+	user_result := utils.DB.Model(&models.User{}).Where("id = ?", store.UserID).Update("is_shop", true)
+	if user_result.Error != nil {
+		return user_result.Error
+	}
+
 	return nil
 }
 
