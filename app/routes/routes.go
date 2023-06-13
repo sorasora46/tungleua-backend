@@ -10,7 +10,7 @@ func SetupRoutes(app *fiber.App) {
 
 	user := api.Group("/users")
 	user.Get("/find-by-id/:id", handlers.GetUserById)
-	user.Get("/exist", handlers.CheckIsUserExist)
+	user.Get("/exist", handlers.CheckDuplicateUser)
 	user.Get("/find-by-email", handlers.GetUserByEmail)
 	user.Put("/update/:id", handlers.UpdateUserById)
 	user.Post("/", handlers.CreateUser)

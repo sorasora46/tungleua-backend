@@ -16,12 +16,12 @@ func UpdateUserById(c *fiber.Ctx) error {
 		return err
 	}
 
-	result, err_result := repositories.UpdateUserById(userID, updates)
-	if err_result != nil {
-		return err_result
+	err := repositories.UpdateUserById(userID, updates)
+	if err != nil {
+		return err
 	}
 
-	return c.SendString(result)
+	return nil
 }
 
 func GetUserById(c *fiber.Ctx) error {
@@ -60,20 +60,18 @@ func GetUserByEmail(c *fiber.Ctx) error {
 	})
 }
 
-func CheckIsUserExist(c *fiber.Ctx) error {
+func CheckDuplicateUser(c *fiber.Ctx) error {
 	req := new(models.User)
 	if err := c.BodyParser(&req); err != nil {
 		return err
 	}
 
-	isFound, err := repositories.CheckIsUserExist(req)
+	err := repositories.CheckDuplicateUser(req)
 	if err != nil {
 		return err
 	}
 
-	return c.JSON(map[string]bool{
-		"isFound": isFound,
-	})
+	return nil
 }
 
 func CreateUser(c *fiber.Ctx) error {
