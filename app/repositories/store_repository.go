@@ -40,9 +40,11 @@ func UpdateStoreById(storeID string, updates map[string]interface{}) error {
 func GetStoreImages(storeID string) ([]models.StoreImage, error) {
 	images := make([]models.StoreImage, 0)
 	result := utils.DB.Find(&images, "id = ?", storeID)
+func CheckDuplicateStore(store *models.Store) (bool, error) {
+	result := utils.DB.Where("user_id = ?", store.UserID).Or("name = ?", store.Name).First(store)
 	if result.Error != nil {
-		return nil, result.Error
+		return false, result.Error
 	}
 
-	return images, nil
+	return store.ID != "", nil
 }
