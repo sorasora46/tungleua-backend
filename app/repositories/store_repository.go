@@ -37,9 +37,20 @@ func UpdateStoreById(storeID string, updates map[string]interface{}) error {
 	return nil
 }
 
-func GetStoreImages(storeID string) ([]models.StoreImage, error) {
-	images := make([]models.StoreImage, 0)
-	result := utils.DB.Find(&images, "id = ?", storeID)
+func DeleteStoreById(storeID string, userID string) error {
+	store_result := utils.DB.Delete(&models.Store{}, storeID)
+	if store_result.Error != nil {
+		return store_result.Error
+	}
+
+	user_result := utils.DB.Model(&models.User{}).Update("is_shop", false)
+	if user_result.Error != nil {
+		return user_result.Error
+	}
+
+	return nil
+}
+
 func CheckDuplicateStore(store *models.Store) (bool, error) {
 	result := utils.DB.Where("user_id = ?", store.UserID).Or("name = ?", store.Name).First(store)
 	if result.Error != nil {
