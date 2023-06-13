@@ -74,9 +74,13 @@ func DeleteStoreById(c *fiber.Ctx) error {
 	return nil
 }
 
+func CheckDuplicateStore(c *fiber.Ctx) error {
+	req := new(models.Store)
+	if err := c.BodyParser(&req); err != nil {
+		return err
 	}
 
-	err := repositories.CreateStore(&store, images)
+	err := repositories.CheckDuplicateStore(req)
 	if err != nil {
 		return err
 	}
