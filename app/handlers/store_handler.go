@@ -61,6 +61,19 @@ func UpdateStoreById(c *fiber.Ctx) error {
 
 	return nil
 }
+
+func DeleteStoreById(c *fiber.Ctx) error {
+	storeID := c.Query("store_id")
+	userID := c.Query("user_id")
+
+	err := repositories.DeleteStoreById(storeID, userID)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 	}
 
 	err := repositories.CreateStore(&store, images)
