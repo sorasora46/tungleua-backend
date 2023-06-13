@@ -37,7 +37,6 @@ func UpdateStoreById(storeID string, updates map[string]interface{}) error {
 	return nil
 }
 
-// TODO Delete All product of store
 func DeleteStoreById(storeID string, userID string) error {
 	store_result := utils.DB.Delete(&models.Store{}, storeID)
 	if store_result.Error != nil {
@@ -47,6 +46,11 @@ func DeleteStoreById(storeID string, userID string) error {
 	user_result := utils.DB.Model(&models.User{}).Update("is_shop", false)
 	if user_result.Error != nil {
 		return user_result.Error
+	}
+
+	product_result := utils.DB.Where("store_id", storeID).Delete(&models.Product{})
+	if product_result.Error != nil {
+		return product_result.Error
 	}
 
 	return nil
