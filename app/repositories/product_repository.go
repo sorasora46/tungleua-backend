@@ -16,7 +16,7 @@ func CreateProduct(product *models.Product) error {
 
 func GetProductById(productID string) (*models.Product, error) {
 	product := new(models.Product)
-	result := utils.DB.Find(product, "id = ?", productID)
+	result := utils.DB.Find(&product, "id = ?", productID)
 	if result.Error != nil {
 		return nil, result.Error
 	}

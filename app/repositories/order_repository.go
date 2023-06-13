@@ -19,12 +19,12 @@ func GetOrderById(orderID string) (*models.Order, error) {
 	order := new(models.Order)
 	product := new(models.Product)
 
-	order_result := utils.DB.Find(order, "id = ?", orderID)
+	order_result := utils.DB.Find(&order, "id = ?", orderID)
 	if order_result.Error != nil {
 		return nil, order_result.Error
 	}
 
-	product_result := utils.DB.Find(product, "id = ?", order.ProductID)
+	product_result := utils.DB.Find(&product, "id = ?", order.ProductID)
 	if product_result.Error != nil {
 		return nil, product_result.Error
 	}

@@ -7,7 +7,7 @@ import (
 
 func GetStoreById(storeID string) (*models.Store, error) {
 	store := new(models.Store)
-	result := utils.DB.Find(store, "id = ?", storeID)
+	result := utils.DB.Find(&store, "id = ?", storeID)
 	if result.Error != nil {
 		return nil, result.Error
 	}
