@@ -1,8 +1,6 @@
 package repositories
 
 import (
-	"fmt"
-
 	"github.com/sorasora46/Tungleua-backend/app/models"
 	"github.com/sorasora46/Tungleua-backend/app/utils"
 )
@@ -60,8 +58,6 @@ func CheckDuplicateUser(user *models.User) error {
 	if result.Error != nil {
 		return result.Error
 	}
-
-	fmt.Println(user)
 
 	return nil
 }
