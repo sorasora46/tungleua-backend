@@ -1,7 +1,6 @@
 package repositories
 
 import (
-	"github.com/google/uuid"
 	"github.com/sorasora46/Tungleua-backend/app/models"
 	"github.com/sorasora46/Tungleua-backend/app/utils"
 )
@@ -16,23 +15,10 @@ func GetStoreById(storeID string) (*models.Store, error) {
 	return store, nil
 }
 
-func CreateStore(store *models.Store, images [][]byte) error {
+func CreateStore(store *models.Store) error {
 	store_result := utils.DB.Create(store)
 	if store_result.Error != nil {
 		return store_result.Error
-	}
-
-	for _, image := range images {
-		id := uuid.New().String()
-		imageData := models.StoreImage{
-			ID:      id,
-			StoreID: store.ID,
-			Image:   image,
-		}
-		image_result := utils.DB.Create(&imageData)
-		if image_result.Error != nil {
-			return image_result.Error
-		}
 	}
 
 	user_result := utils.DB.Model(&models.User{}).Where("id = ?", store.UserID).Update("is_shop", true)
