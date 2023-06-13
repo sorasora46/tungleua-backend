@@ -7,12 +7,12 @@ import (
 	"github.com/sorasora46/Tungleua-backend/app/utils"
 )
 
-func UpdateUserById(userID string, updates map[string]interface{}) (string, error) {
+func UpdateUserById(userID string, updates map[string]interface{}) error {
 	result := utils.DB.Model(&models.User{}).Where("id = ?", userID).Updates(updates)
 	if result.Error != nil {
-		return "failed", result.Error
+		return result.Error
 	}
-	return "success", nil
+	return nil
 }
 
 func GetUserById(userID string) (*models.User, error) {
@@ -55,15 +55,15 @@ func GetUserByName(name string) (*models.User, error) {
 	return user, nil
 }
 
-func CheckIsUserExist(user *models.User) (bool, error) {
+func CheckIsUserExist(user *models.User) error {
 	result := utils.DB.Where("email = ?", user.Email).Or("name = ?", user.Name).Or("phone = ?", user.Phone).First(user)
 	if result.Error != nil {
-		return false, result.Error
+		return result.Error
 	}
 
 	fmt.Println(user)
 
-	return user.ID != "", nil
+	return nil
 }
 
 // func CreateUser(user *models.User, user_password *models.Password) error {
