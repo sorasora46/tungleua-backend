@@ -14,8 +14,7 @@ func CreateOrder(order *models.Order) error {
 	return nil
 }
 
-// TODO return json with product info
-func GetOrderById(orderID string) (*models.Order, error) {
+func GetOrderById(orderID string) (*models.OrderDetail, error) {
 	order := new(models.Order)
 	product := new(models.Product)
 
@@ -29,7 +28,21 @@ func GetOrderById(orderID string) (*models.Order, error) {
 		return nil, product_result.Error
 	}
 
-	return order, nil
+	order_detail := models.OrderDetail{
+		ID:            order.ID,
+		UserID:        order.UserID,
+		ProductID:     order.ProductID,
+		StoreID:       product.StoreID,
+		Title:         product.Title,
+		Description:   product.Description,
+		Image:         product.Image,
+		Price:         product.Price,
+		CreatedAt:     order.CreatedAt,
+		PaymentStatus: order.PaymentStatus,
+		Amount:        order.Amount,
+	}
+
+	return &order_detail, nil
 }
 
 // TODO return json with product info
