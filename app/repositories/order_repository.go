@@ -45,16 +45,40 @@ func GetOrderById(orderID string) (*models.OrderDetail, error) {
 	return &order_detail, nil
 }
 
-// TODO return json with product info
-func GetOrders(userID string) ([]models.Order, error) {
+func GetOrders(userID string) ([]models.OrderDetail, error) {
 	orders := make([]models.Order, 0)
+	orderDetails := make([]models.OrderDetail, 0)
 
-	result := utils.DB.Find(&orders, "user_id = ?", userID)
-	if result.Error != nil {
-		return nil, result.Error
+	orderResult := utils.DB.Find(&orders, "user_id = ?", userID)
+	if orderResult.Error != nil {
+		return nil, orderResult.Error
 	}
 
-	return orders, nil
+	for _, order := range orders {
+		product := new(models.Product)
+		productResult := utils.DB.Find(&product, "id = ?", order.ProductID)
+		if productResult.Error != nil {
+			return nil, productResult.Error
+		}
+
+		orderDetail := models.OrderDetail{
+			ID:            order.ID,
+			UserID:        order.UserID,
+			ProductID:     order.ProductID,
+			StoreID:       product.StoreID,
+			Title:         product.Title,
+			Description:   product.Description,
+			Image:         product.Image,
+			Price:         product.Price,
+			CreatedAt:     order.CreatedAt,
+			PaymentStatus: order.PaymentStatus,
+			Amount:        order.Amount,
+		}
+
+		orderDetails = append(orderDetails, orderDetail)
+	}
+
+	return orderDetails, nil
 }
 
 func DeleteOrderById(userID string) error {
