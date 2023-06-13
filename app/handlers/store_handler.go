@@ -45,17 +45,22 @@ func CreateStore(c *fiber.Ctx) error {
 
 	return nil
 }
+
+func UpdateStoreById(c *fiber.Ctx) error {
+	storeID := c.Params("id")
+
+	updates := make(map[string]interface{})
+	if err := c.BodyParser(&updates); err != nil {
+		return err
 	}
 
-	imagesInterface := req["images"].([]interface{})
-	images := make([][]byte, len(imagesInterface))
-	for i, img := range imagesInterface {
-		imgStr := img.(string)
-		decodedImg, err := base64.StdEncoding.DecodeString(imgStr)
-		if err != nil {
-			return err
-		}
-		images[i] = decodedImg
+	err := repositories.UpdateStoreById(storeID, updates)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
 	}
 
 	err := repositories.CreateStore(&store, images)
