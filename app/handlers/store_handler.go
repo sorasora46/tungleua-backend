@@ -32,13 +32,25 @@ func GetStoreById(c *fiber.Ctx) error {
 func CreateStore(c *fiber.Ctx) error {
 	id := uuid.New().String()
 
-	req := new(models.Store)
+	req := make(map[string]interface{})
 	if parse_err := c.BodyParser(&req); parse_err != nil {
 		return parse_err
 	}
-	req.ID = id
 
-	err := repositories.CreateStore(req)
+	store := models.Store{
+		ID:          id,
+		Name:        req["name"].(string),
+		Contact:     req["contact"].(string),
+		TimeOpen:    req["time_open"].(string),
+		TimeClose:   req["time_close"].(string),
+		Description: req["description"].(string),
+		Latitude:    req["latitude"].(float64),
+		Longitude:   req["longitude"].(float64),
+		UserID:      req["user_id"].(string),
+		Image:       []byte(req["image"].(string)),
+	}
+
+	err := repositories.CreateStore(&store)
 	if err != nil {
 		return err
 	}
