@@ -4,10 +4,12 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"net/http"
 
-	firebase "firebase.google.com/go"
-	"firebase.google.com/go/auth"
+	firebase "firebase.google.com/go/v4"
+	"firebase.google.com/go/v4/auth"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/sorasora46/Tungleua-backend/app/handlers"
 	"github.com/sorasora46/Tungleua-backend/app/models"
 	"github.com/sorasora46/Tungleua-backend/app/utils"
@@ -22,6 +24,7 @@ func main() {
 	config := &firebase.Config{
 		ProjectID: "tungluea",
 	}
+
 	opt := option.WithCredentialsFile("serviceAccountKey.json")
 	firebaseApp, err := firebase.NewApp(context.Background(), config, opt)
 	if err != nil {
@@ -33,6 +36,9 @@ func main() {
 	}
 
 	app := fiber.New()
+	app.Use(cors.New(cors.Config{
+		AllowHeaders: "Origin, Content-Type, Accept, Authorization",
+	}))
 	app.Post("/create", handlers.Adduser)
 	app.Get("/", func(c *fiber.Ctx) error {
 		user := new(models.User)
@@ -40,6 +46,17 @@ func main() {
 
 		fmt.Println(user)
 		return c.JSON(user)
+	})
+	app.Get("/login", func(c *fiber.Ctx) error {
+		authorizationHeader := c.Get("Authorization")
+		token := parseToken(authorizationHeader)
+		// Perform token validation or further processing
+		result, err := firebaseAuth.VerifyIDToken(context.Background(), token)
+		if err != nil {
+			return c.Status(http.StatusBadRequest).JSON(fiber.Map{"error": "Invalid token"})
+		}
+		fmt.Println("Received token: ", result.Claims["email"].(string))
+		return c.SendString("Token received")
 	})
 
 	app.Post("/register", func(c *fiber.Ctx) error {
@@ -106,4 +123,12 @@ func generateFirebaseToken(client *auth.Client, uid string) (string, error) {
 		return "", err
 	}
 	return token, nil
+}
+func parseToken(header string) string {
+	// Extract the token from the Authorization header
+	const bearerPrefix = "Bearer "
+	if len(header) > len(bearerPrefix) && header[:len(bearerPrefix)] == bearerPrefix {
+		return header[len(bearerPrefix):]
+	}
+	return ""
 }
