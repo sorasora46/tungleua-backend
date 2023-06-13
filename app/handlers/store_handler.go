@@ -1,8 +1,6 @@
 package handlers
 
 import (
-	"encoding/base64"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	"github.com/sorasora46/Tungleua-backend/app/models"
@@ -17,11 +15,6 @@ func GetStoreById(c *fiber.Ctx) error {
 		return store_err
 	}
 
-	images, image_err := repositories.GetStoreImages(storeID)
-	if image_err != nil {
-		return image_err
-	}
-
 	return c.JSON(map[string]any{
 		"id":          store.ID,
 		"name":        store.Name,
@@ -31,7 +24,8 @@ func GetStoreById(c *fiber.Ctx) error {
 		"description": store.Description,
 		"latitude":    store.Latitude,
 		"longtitude":  store.Longitude,
-		"images":      images,
+		"user_id":     store.UserID,
+		"image":       store.Image,
 	})
 }
 
