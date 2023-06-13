@@ -5,6 +5,17 @@ import (
 	"github.com/sorasora46/Tungleua-backend/app/utils"
 )
 
+func GetDiscountById(discountID string) (*models.Discount, error) {
+	discount := new(models.Discount)
+
+	result := utils.DB.Find(&discount, "id = ?", discountID)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return discount, nil
+}
+
 func GetDiscounts(userID string) ([]models.Discount, error) {
 	user_discounts := make([]models.UserDiscount, 0)
 	discounts := make([]models.Discount, 0)
