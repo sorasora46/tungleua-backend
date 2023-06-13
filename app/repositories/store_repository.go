@@ -29,12 +29,12 @@ func CreateStore(store *models.Store) error {
 	return nil
 }
 
-func UpdateStoreById(storeID string, updates map[string]interface{}) (string, error) {
+func UpdateStoreById(storeID string, updates map[string]interface{}) error {
 	result := utils.DB.Model(&models.Store{}).Where("id = ?", storeID).Updates(updates)
 	if result.Error != nil {
-		return "failed", result.Error
+		return result.Error
 	}
-	return "success", nil
+	return nil
 }
 
 func GetStoreImages(storeID string) ([]models.StoreImage, error) {
