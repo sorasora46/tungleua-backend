@@ -7,10 +7,10 @@ import (
 	"github.com/sorasora46/Tungleua-backend/app/repositories"
 )
 
-func GetStoreById(c *fiber.Ctx) error {
-	storeID := c.Params("id")
+func GetStoreByUserId(c *fiber.Ctx) error {
+	userID := c.Params("id")
 
-	store, store_err := repositories.GetStoreById(storeID)
+	store, store_err := repositories.GetStoreByUserId(userID)
 	if store_err != nil {
 		return store_err
 	}
