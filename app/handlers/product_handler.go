@@ -51,7 +51,7 @@ func GetProducts(c *fiber.Ctx) error {
 			"description": p.Description,
 			"price":       p.Price,
 			"store_id":    p.StoreID,
-			"image":       p.Image,
+			"image":       string(p.Image),
 			"amount":      p.Amount,
 		}
 	}
