@@ -43,6 +43,19 @@ func GetProducts(c *fiber.Ctx) error {
 		return err
 	}
 
+	products := make([]map[string]interface{}, len(result))
+	for i, p := range result {
+		products[i] = map[string]interface{}{
+			"Id":          p.ID,
+			"Title":       p.Title,
+			"Description": p.Description,
+			"Price":       p.Price,
+			"StoreId":     p.StoreID,
+			"Image":       p.Image,
+			"Amount":      p.Amount,
+		}
+	}
+
 	return c.JSON(map[string][]models.Product{
 		"products": result,
 	})
