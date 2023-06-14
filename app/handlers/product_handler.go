@@ -56,8 +56,8 @@ func GetProducts(c *fiber.Ctx) error {
 		}
 	}
 
-	return c.JSON(map[string][]models.Product{
-		"products": result,
+	return c.JSON(map[string]any{
+		"products": products,
 	})
 }
 
