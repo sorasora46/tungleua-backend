@@ -25,7 +25,7 @@ func GetStoreByUserId(c *fiber.Ctx) error {
 		"latitude":    store.Latitude,
 		"longtitude":  store.Longitude,
 		"user_id":     store.UserID,
-		"image":       store.Image,
+		"image":       string(store.Image),
 	})
 }
 
