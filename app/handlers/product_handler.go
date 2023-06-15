@@ -2,15 +2,31 @@ package handlers
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/google/uuid"
 	"github.com/sorasora46/Tungleua-backend/app/models"
 	"github.com/sorasora46/Tungleua-backend/app/repositories"
 )
 
 func CreateProduct(c *fiber.Ctx) error {
+	id := uuid.New().String()
+	req := make(map[string]interface{})
 	product := new(models.Product)
 
-	if err := c.BodyParser(&product); err != nil {
+	if err := c.BodyParser(&req); err != nil {
 		return err
+	}
+	// map yak chip hai kuay
+	product.ID = id
+	product.Amount = uint(req["amount"].(float64))
+	product.Description = req["description"].(string)
+	product.Image = []byte(req["image"].(string))
+	product.Price = uint(req["price"].(float64))
+	product.StoreID = req["store_id"].(string)
+	product.Title = req["title"].(string)
+
+	create_err := repositories.CreateProduct(product)
+	if create_err != nil {
+		return create_err
 	}
 
 	return nil
