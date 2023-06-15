@@ -50,3 +50,14 @@ func UpdateProductById(productID string, updates map[string]interface{}) error {
 
 	return nil
 }
+
+func GetProductImages(storeID string) ([][]byte, error) {
+	var images [][]byte
+
+	// Retrieve images with matching storeID
+	if err := utils.DB.Model(&models.Product{}).Select("image").Where("store_id = ?", storeID).Find(&images).Error; err != nil {
+		return nil, err
+	}
+
+	return images, nil
+}

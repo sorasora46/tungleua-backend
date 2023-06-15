@@ -103,3 +103,20 @@ func UpdateProductById(c *fiber.Ctx) error {
 
 	return nil
 }
+
+func GetProductImages(c *fiber.Ctx) error {
+	storeID := c.Params("id")
+
+	images, err := repositories.GetProductImages(storeID)
+	if err != nil {
+		return err
+	}
+
+	// Convert []byte to string
+	convertedImages := make([]string, len(images))
+	for i, img := range images {
+		convertedImages[i] = string(img)
+	}
+
+	return c.JSON(convertedImages)
+}
