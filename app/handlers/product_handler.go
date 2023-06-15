@@ -118,5 +118,7 @@ func GetProductImages(c *fiber.Ctx) error {
 		convertedImages[i] = string(img)
 	}
 
-	return c.JSON(convertedImages)
+	return c.JSON(map[string]any{
+		"images": convertedImages,
+	})
 }
