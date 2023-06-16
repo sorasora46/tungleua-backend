@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
@@ -66,12 +67,14 @@ func CheckDuplicateUser(c *fiber.Ctx) error {
 		return err
 	}
 
-	err := repositories.CheckDuplicateUser(req)
+	isFound, err := repositories.CheckDuplicateUser(req)
 	if err != nil {
-		return err
+		return c.JSON(map[string]any{"isFound": isFound})
 	}
 
-	return nil
+	return c.JSON(map[string]any{
+		"isFound": isFound,
+	})
 }
 
 func CreateUser(c *fiber.Ctx) error {
@@ -87,6 +90,7 @@ func CreateUser(c *fiber.Ctx) error {
 	if err := c.BodyParser(&req); err != nil {
 		return err
 	}
+	fmt.Println(req)
 	req.Name = strings.ToLower(req.Name)
 	req.Email = strings.ToLower(req.Email)
 	// req.ID = id

@@ -53,13 +53,13 @@ func GetUserByName(name string) (*models.User, error) {
 	return user, nil
 }
 
-func CheckDuplicateUser(user *models.User) error {
+func CheckDuplicateUser(user *models.User) (bool, error) {
 	result := utils.DB.Where("email = ?", user.Email).Or("name = ?", user.Name).Or("phone = ?", user.Phone).First(user)
 	if result.Error != nil {
-		return result.Error
+		return false, result.Error
 	}
 
-	return nil
+	return true, nil
 }
 
 // func CreateUser(user *models.User, user_password *models.Password) error {
