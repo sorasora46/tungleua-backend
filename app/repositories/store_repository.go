@@ -15,6 +15,16 @@ func GetStoreByUserId(userID string) (*models.Store, error) {
 	return store, nil
 }
 
+func GetStoreById(storeID string) (*models.Store, error) {
+	store := new(models.Store)
+	result := utils.DB.Find(&store, "id = ?", storeID)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return store, nil
+}
+
 func CreateStore(store *models.Store) error {
 	store_result := utils.DB.Create(store)
 	if store_result.Error != nil {

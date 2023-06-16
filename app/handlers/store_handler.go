@@ -31,6 +31,28 @@ func GetStoreByUserId(c *fiber.Ctx) error {
 	})
 }
 
+func GetStoreById(c *fiber.Ctx) error {
+	storeID := c.Params("id")
+
+	store, store_err := repositories.GetStoreById(storeID)
+	if store_err != nil {
+		return store_err
+	}
+
+	return c.JSON(map[string]any{
+		"id":          store.ID,
+		"name":        store.Name,
+		"contact":     store.Contact,
+		"time_open":   store.TimeOpen,
+		"time_close":  store.TimeClose,
+		"description": store.Description,
+		"latitude":    store.Latitude,
+		"longtitude":  store.Longitude,
+		"user_id":     store.UserID,
+		"image":       string(store.Image),
+	})
+}
+
 func CreateStore(c *fiber.Ctx) error {
 	id := uuid.New().String()
 
