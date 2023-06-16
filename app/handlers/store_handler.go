@@ -130,16 +130,10 @@ func PopulateMap(c *fiber.Ctx) error {
 	stores := make([]map[string]interface{}, len(result))
 	for i, s := range result {
 		stores[i] = map[string]interface{}{
-			"id": s.ID,
-			// "name":        s.Name,
-			// "contact":     s.Contact,
-			// "time_open":   s.TimeOpen,
-			// "time_close":  s.TimeClose,
-			// "description": s.Description,
+			"id":        s.ID,
 			"latitude":  s.Latitude,
 			"longitude": s.Longitude,
 			"user_id":   s.UserID,
-			// "image":       string(s.Image),
 		}
 	}
 
