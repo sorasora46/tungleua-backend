@@ -65,6 +65,25 @@ func CheckDuplicateStore(store *models.Store) error {
 	return nil
 }
 
-func PopulateMap(latitude float64, longitude float64) error {
-	return nil
+func PopulateMap(offset float64, center_lat float64, center_long float64) ([]models.Store, error) {
+	stores := make([]models.Store, 0)
+
+	kmToDeg := 1.0 / 111.0 // 1 km to degree
+
+	offsetDeg := offset * kmToDeg
+
+	max_lat := center_lat + offsetDeg
+	max_long := center_long + offsetDeg
+	min_lat := center_lat - offsetDeg
+	min_long := center_long - offsetDeg
+
+	result := utils.DB.
+		Select("id, latitude, longitude, user_id").
+		Where("latitude < ? AND latitude > ? AND longitude < ? AND longitude > ?", max_lat, min_lat, max_long, min_long).
+		Find(&stores)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return stores, nil
 }

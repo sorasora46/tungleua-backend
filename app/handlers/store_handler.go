@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"strconv"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	"github.com/sorasora46/Tungleua-backend/app/models"
@@ -101,5 +103,47 @@ func CheckDuplicateStore(c *fiber.Ctx) error {
 }
 
 func PopulateMap(c *fiber.Ctx) error {
-	return nil
+	offsetStr := c.Query("offset")
+	centerLatStr := c.Query("center_lat")
+	centerLongStr := c.Query("center_long")
+
+	offset, err := strconv.ParseFloat(offsetStr, 64)
+	if err != nil {
+		return err
+	}
+
+	centerLat, err := strconv.ParseFloat(centerLatStr, 64)
+	if err != nil {
+		return err
+	}
+
+	centerLong, err := strconv.ParseFloat(centerLongStr, 64)
+	if err != nil {
+		return err
+	}
+
+	result, err := repositories.PopulateMap(offset, centerLat, centerLong)
+	if err != nil {
+		return err
+	}
+
+	stores := make([]map[string]interface{}, len(result))
+	for i, s := range result {
+		stores[i] = map[string]interface{}{
+			"id": s.ID,
+			// "name":        s.Name,
+			// "contact":     s.Contact,
+			// "time_open":   s.TimeOpen,
+			// "time_close":  s.TimeClose,
+			// "description": s.Description,
+			"latitude":  s.Latitude,
+			"longitude": s.Longitude,
+			"user_id":   s.UserID,
+			// "image":       string(s.Image),
+		}
+	}
+
+	return c.JSON(map[string]any{
+		"stores": stores,
+	})
 }
