@@ -35,7 +35,7 @@ func GetProducts(storeID string) ([]models.Product, error) {
 }
 
 func DeleteProductById(productID string) error {
-	result := utils.DB.Delete(&models.Product{}, productID)
+	result := utils.DB.Where("id = ?", productID).Delete(&models.Product{})
 	if result.Error != nil {
 		return result.Error
 	}
