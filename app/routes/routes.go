@@ -21,6 +21,7 @@ func SetupRoutes(app *fiber.App) {
 
 	store := api.Group("/stores")
 	store.Get("/find-by-id/:id", handlers.GetStoreById)
+	store.Get("/find-by-user/:id", handlers.GetStoreByUserId)
 	store.Get("/exist", handlers.CheckDuplicateStore)
 	store.Put("/update/:id", handlers.UpdateStoreById)
 	store.Post("/", handlers.CreateStore)
