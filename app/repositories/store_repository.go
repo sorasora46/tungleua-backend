@@ -64,3 +64,7 @@ func CheckDuplicateStore(store *models.Store) error {
 
 	return nil
 }
+
+func PopulateMap(latitude float64, longitude float64) error {
+	return nil
+}

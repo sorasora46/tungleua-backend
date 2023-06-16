@@ -25,6 +25,7 @@ func SetupRoutes(app *fiber.App) {
 	store.Put("/update/:id", handlers.UpdateStoreById)
 	store.Post("/", handlers.CreateStore)
 	store.Delete("/delete", handlers.DeleteStoreById)
+	store.Get("/populate", handlers.PopulateMap)
 
 	product := api.Group("/products")
 	product.Post("/", handlers.CreateProduct)

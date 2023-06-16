@@ -99,3 +99,7 @@ func CheckDuplicateStore(c *fiber.Ctx) error {
 
 	return nil
 }
+
+func PopulateMap(c *fiber.Ctx) error {
+	return nil
+}
