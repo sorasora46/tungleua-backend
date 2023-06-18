@@ -36,12 +36,12 @@ func SetupRoutes(app *fiber.App) {
 	product.Delete("/delete/:id", handlers.DeleteProductById)
 	product.Get("/images/:id", handlers.GetProductImages)
 
-	order := api.Group("/orders")
-	order.Post("/", handlers.CreateOrder)
-	order.Get("/find-by-id/:id", handlers.GetOrderById)
-	order.Get("/find-by-user/:id", handlers.GetOrders)
-	order.Put("/update/:id", handlers.UpdateOrderStatus)
-	order.Delete("/delete/:id", handlers.DeleteOrderById)
+	// order := api.Group("/orders")
+	// order.Post("/", handlers.CreateOrder)
+	// order.Get("/find-by-id/:id", handlers.GetOrderById)
+	// order.Get("/find-by-user/:id", handlers.GetOrders)
+	// order.Put("/update/:id", handlers.UpdateOrderStatus)
+	// order.Delete("/delete/:id", handlers.DeleteOrderById)
 
 	discount := api.Group("/discounts")
 	discount.Get("/", handlers.GetDiscounts)
