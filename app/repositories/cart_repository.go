@@ -33,3 +33,35 @@ func GetCartByUserId(userID string) ([]models.CartDetail, error) {
 
 	return results, nil
 }
+
+func DeleteItemFromCart(userID string, productID string) error {
+	if err := utils.DB.Where("user_id = ? AND product_id = ?", userID, productID).Delete(&models.Cart{}); err.Error != nil {
+		return err.Error
+	}
+
+	return nil
+}
+
+// newAmount was calculated from the frontend
+// This function is used for both decrement and increment
+func UpdateItemAmount(userID string, productID string, newAmount uint) error {
+	if err := utils.DB.Model(&models.Cart{}).Where("user_id = ? AND product_id = ?", userID, productID).Update("amount", newAmount); err.Error != nil {
+		return err.Error
+	}
+
+	return nil
+}
+
+func AddItemToCart(userID string, productID string, amount uint) error {
+	cart := models.Cart{
+		UserID:    userID,
+		ProductID: productID,
+		Amount:    amount,
+	}
+
+	if err := utils.DB.Create(cart); err.Error != nil {
+		return err.Error
+	}
+
+	return nil
+}
