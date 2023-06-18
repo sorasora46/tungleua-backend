@@ -17,41 +17,41 @@ func CreateOrder(c *fiber.Ctx) error {
 	return nil
 }
 
-func GetOrderById(c *fiber.Ctx) error {
-	orderID := c.Params("id")
+// func GetOrderById(c *fiber.Ctx) error {
+// 	orderID := c.Params("id")
 
-	order, err := repositories.GetOrderById(orderID)
-	if err != nil {
-		return err
-	}
+// 	order, err := repositories.GetOrderById(orderID)
+// 	if err != nil {
+// 		return err
+// 	}
 
-	return c.JSON(map[string]any{
-		"order_id":       order.ID,
-		"user_id":        order.UserID,
-		"product_id":     order.ProductID,
-		"store_id":       order.StoreID,
-		"title":          order.Title,
-		"description":    order.Description,
-		"image":          order.Image,
-		"created_at":     order.CreatedAt,
-		"amount":         order.Amount,
-		"price":          order.Price,
-		"payment_status": order.PaymentStatus,
-	})
-}
+// 	return c.JSON(map[string]any{
+// 		"order_id":       order.ID,
+// 		"user_id":        order.UserID,
+// 		"product_id":     order.ProductID,
+// 		"store_id":       order.StoreID,
+// 		"title":          order.Title,
+// 		"description":    order.Description,
+// 		"image":          order.Image,
+// 		"created_at":     order.CreatedAt,
+// 		"amount":         order.Amount,
+// 		"price":          order.Price,
+// 		"payment_status": order.PaymentStatus,
+// 	})
+// }
 
-func GetOrders(c *fiber.Ctx) error {
-	userID := c.Params("id")
+// func GetOrders(c *fiber.Ctx) error {
+// 	userID := c.Params("id")
 
-	orders, err := repositories.GetOrders(userID)
-	if err != nil {
-		return err
-	}
+// 	orders, err := repositories.GetOrders(userID)
+// 	if err != nil {
+// 		return err
+// 	}
 
-	return c.JSON(map[string][]models.OrderDetail{
-		"orders": orders,
-	})
-}
+// 	return c.JSON(map[string][]models.OrderDetail{
+// 		"orders": orders,
+// 	})
+// }
 
 func DeleteOrderById(c *fiber.Ctx) error {
 	orderID := c.Params("id")
