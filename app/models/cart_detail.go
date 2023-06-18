@@ -3,7 +3,7 @@ package models
 type CartDetail struct {
 	UserID    string
 	ProductID string
-	Amount    string
+	Amount    uint
 	Title     string
 	Price     uint
 	Image     []byte
