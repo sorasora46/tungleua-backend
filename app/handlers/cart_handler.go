@@ -15,8 +15,21 @@ func GetCartByUserId(c *fiber.Ctx) error {
 		return err
 	}
 
+	response := make([]map[string]interface{}, len(results))
+
+	for i, item := range results {
+		response[i] = map[string]interface{}{
+			"user_id":    item.UserID,
+			"product_id": item.ProductID,
+			"amount":     item.Amount,
+			"title":      item.Title,
+			"price":      item.Price,
+			"image":      string(item.Image),
+		}
+	}
+
 	return c.JSON(map[string]any{
-		"results": results,
+		"results": response,
 	})
 }
 
