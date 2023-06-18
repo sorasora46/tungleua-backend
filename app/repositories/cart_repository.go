@@ -59,7 +59,18 @@ func AddItemToCart(userID string, productID string, amount uint) error {
 		Amount:    amount,
 	}
 
-	if err := utils.DB.Create(cart); err.Error != nil {
+	oldCart := new(models.Cart)
+	if err := utils.DB.Find(&oldCart, "user_id = ? AND product_id = ?", userID, productID); err.Error != nil {
+		// not found
+		if create_err := utils.DB.Create(cart); create_err.Error != nil {
+			return create_err.Error
+		}
+
+		return nil
+	}
+
+	// found
+	if err := utils.DB.Model(&models.Cart{}).Where("user_id = ? AND product_id = ?", userID, productID).Update("amount", oldCart.Amount+amount); err.Error != nil {
 		return err.Error
 	}
 
