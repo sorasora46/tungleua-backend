@@ -25,6 +25,7 @@ func GetCartByUserId(c *fiber.Ctx) error {
 			"title":      item.Title,
 			"price":      item.Price,
 			"image":      string(item.Image),
+			"max_amount": item.MaxAmount,
 		}
 	}
 

@@ -7,4 +7,5 @@ type CartDetail struct {
 	Title     string
 	Price     uint
 	Image     []byte
+	MaxAmount uint
 }

@@ -27,6 +27,7 @@ func GetCartByUserId(userID string) ([]models.CartDetail, error) {
 			Title:     product.Title,
 			Price:     product.Price,
 			Image:     product.Image,
+			MaxAmount: product.Amount,
 		})
 
 	}
