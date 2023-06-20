@@ -88,7 +88,7 @@ func CreateCoupon(c *fiber.Ctx) error {
 
 	// Convert string to time.Time
 	expireDateStr := req["expire_date"].(string)
-	expireDate, err := time.Parse(time.RFC3339, expireDateStr)
+	expireDate, err := time.Parse("2006-01-02T15:04:05-0700", expireDateStr)
 	if err != nil {
 		// Handle the error if the string cannot be parsed as a time.Time
 		return err
