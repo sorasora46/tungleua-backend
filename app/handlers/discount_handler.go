@@ -101,3 +101,14 @@ func CreateCoupon(c *fiber.Ctx) error {
 
 	return nil
 }
+
+func AddCouponToUser(c *fiber.Ctx) error {
+	userID := c.Query("user_id")
+	discountID := c.Query("discount_id")
+
+	if err := repositories.AddCouponToUser(&models.UserDiscount{UserID: userID, DiscountID: discountID}); err != nil {
+		return err
+	}
+
+	return nil
+}

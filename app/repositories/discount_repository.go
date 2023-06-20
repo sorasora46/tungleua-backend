@@ -75,3 +75,11 @@ func CreateCoupon(discount *models.Discount) error {
 
 	return nil
 }
+
+func AddCouponToUser(userDiscount *models.UserDiscount) error {
+	if err := utils.DB.Create(userDiscount); err.Error != nil {
+		return err.Error
+	}
+
+	return nil
+}
