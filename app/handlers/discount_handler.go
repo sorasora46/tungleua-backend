@@ -12,12 +12,22 @@ import (
 func GetDiscounts(c *fiber.Ctx) error {
 	userID := c.Params("id")
 
-	discounts, err := repositories.GetDiscounts(userID)
+	result, err := repositories.GetDiscounts(userID)
 	if err != nil {
 		return err
 	}
 
-	return c.JSON(map[string][]models.Discount{
+	discounts := make([]map[string]interface{}, len(result))
+	for i, d := range result {
+		discounts[i] = map[string]interface{}{
+			"id":        d.ID,
+			"title":     d.Title,
+			"discount":  d.Discount,
+			"expire_at": d.ExpireDate,
+		}
+	}
+
+	return c.JSON(map[string]any{
 		"discounts": discounts,
 	})
 }
