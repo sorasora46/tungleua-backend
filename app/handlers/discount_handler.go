@@ -84,7 +84,7 @@ func CreateCoupon(c *fiber.Ctx) error {
 	}
 	discount.ID = id
 	discount.Title = req["title"].(string)
-	discount.Discount = uint(req["discount"].(float64))
+	discount.Discount = req["discount"].(float64)
 
 	// Convert string to time.Time
 	expireDateStr := req["expire_date"].(string)
