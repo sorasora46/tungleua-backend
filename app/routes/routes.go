@@ -52,4 +52,9 @@ func SetupRoutes(app *fiber.App) {
 	discount := api.Group("/discounts")
 	discount.Get("/find-by-user/:id", handlers.GetDiscounts)
 	discount.Get("/find-by-id/:id", handlers.GetDiscountById)
+	discount.Delete("/remove/:id")
+	// for admin ? ? ?
+	discount.Delete("/delete/:id")
+	discount.Put("/update/:id")
+	discount.Post("/create")
 }
