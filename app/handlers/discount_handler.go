@@ -31,5 +31,6 @@ func GetDiscountById(c *fiber.Ctx) error {
 		"discount_id": discount.ID,
 		"titile":      discount.Title,
 		"discount":    discount.Discount,
+		"expire_date": discount.ExpireDate,
 	})
 }
