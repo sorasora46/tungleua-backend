@@ -67,3 +67,11 @@ func UpdateCouponById(discountID string, updates map[string]interface{}) error {
 
 	return nil
 }
+
+func CreateCoupon(discount *models.Discount) error {
+	if err := utils.DB.Create(discount); err.Error != nil {
+		return err.Error
+	}
+
+	return nil
+}

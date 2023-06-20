@@ -1,7 +1,10 @@
 package handlers
 
 import (
+	"time"
+
 	"github.com/gofiber/fiber/v2"
+	"github.com/google/uuid"
 	"github.com/sorasora46/Tungleua-backend/app/models"
 	"github.com/sorasora46/Tungleua-backend/app/repositories"
 )
@@ -65,6 +68,34 @@ func UpdateCouponById(c *fiber.Ctx) error {
 	}
 
 	if err := repositories.UpdateCouponById(discountID, updates); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func CreateCoupon(c *fiber.Ctx) error {
+	id := uuid.New().String()
+	req := make(map[string]interface{})
+	discount := new(models.Discount)
+
+	if err := c.BodyParser(&req); err != nil {
+		return err
+	}
+	discount.ID = id
+	discount.Title = req["title"].(string)
+	discount.Discount = uint(req["discount"].(float64))
+
+	// Convert string to time.Time
+	expireDateStr := req["expire_date"].(string)
+	expireDate, err := time.Parse(time.RFC3339, expireDateStr)
+	if err != nil {
+		// Handle the error if the string cannot be parsed as a time.Time
+		return err
+	}
+	discount.ExpireDate = expireDate
+
+	if err := repositories.CreateCoupon(discount); err != nil {
 		return err
 	}
 
