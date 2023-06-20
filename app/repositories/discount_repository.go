@@ -37,3 +37,16 @@ func GetDiscounts(userID string) ([]models.Discount, error) {
 
 	return discounts, nil
 }
+
+// Delete coupon from everyone
+func DeleteCouponById(discountID string) error {
+	if err := utils.DB.Where("discount_id = ?", discountID).Delete(&models.UserDiscount{}); err.Error != nil {
+		return err.Error
+	}
+
+	if err := utils.DB.Where("id = ?", discountID).Delete(&models.Discount{}); err.Error != nil {
+		return err.Error
+	}
+
+	return nil
+}

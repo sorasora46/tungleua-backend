@@ -34,3 +34,13 @@ func GetDiscountById(c *fiber.Ctx) error {
 		"expire_date": discount.ExpireDate,
 	})
 }
+
+func DeleteCouponById(c *fiber.Ctx) error {
+	discountID := c.Params("id")
+
+	if err := repositories.DeleteCouponById(discountID); err != nil {
+		return err
+	}
+
+	return nil
+}

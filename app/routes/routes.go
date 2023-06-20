@@ -54,7 +54,7 @@ func SetupRoutes(app *fiber.App) {
 	discount.Get("/find-by-id/:id", handlers.GetDiscountById)
 	discount.Delete("/remove/:id")
 	// for admin ? ? ?
-	discount.Delete("/delete/:id")
+	discount.Delete("/delete/:id", handlers.DeleteCouponById)
 	discount.Put("/update/:id")
 	discount.Post("/create")
 }
