@@ -55,3 +55,18 @@ func RemoveCouponFromUser(c *fiber.Ctx) error {
 
 	return nil
 }
+
+func UpdateCouponById(c *fiber.Ctx) error {
+	discountID := c.Params("id")
+
+	updates := make(map[string]interface{})
+	if err := c.BodyParser(&updates); err != nil {
+		return err
+	}
+
+	if err := repositories.UpdateCouponById(discountID, updates); err != nil {
+		return err
+	}
+
+	return nil
+}

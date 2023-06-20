@@ -59,3 +59,11 @@ func RemoveCouponFromUser(discountID string, userID string) error {
 
 	return nil
 }
+
+func UpdateCouponById(discountID string, updates map[string]interface{}) error {
+	if err := utils.DB.Model(&models.Discount{}).Where("id = ?", discountID).Updates(updates); err.Error != nil {
+		return err.Error
+	}
+
+	return nil
+}
