@@ -44,3 +44,14 @@ func DeleteCouponById(c *fiber.Ctx) error {
 
 	return nil
 }
+
+func RemoveCouponFromUser(c *fiber.Ctx) error {
+	discountID := c.Query("discount_id")
+	userID := c.Query("user_id")
+
+	if err := repositories.RemoveCouponFromUser(discountID, userID); err != nil {
+		return err
+	}
+
+	return nil
+}

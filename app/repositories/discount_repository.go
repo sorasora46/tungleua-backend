@@ -50,3 +50,12 @@ func DeleteCouponById(discountID string) error {
 
 	return nil
 }
+
+// Remove specific coupon from specific user
+func RemoveCouponFromUser(discountID string, userID string) error {
+	if err := utils.DB.Where("discount_id = ? AND user_id = ?", discountID, userID).Delete(&models.UserDiscount{}); err.Error != nil {
+		return err.Error
+	}
+
+	return nil
+}
