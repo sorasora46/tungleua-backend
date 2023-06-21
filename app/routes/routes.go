@@ -38,7 +38,9 @@ func SetupRoutes(app *fiber.App) {
 
 	cart := api.Group("/carts")
 	cart.Get("/find-by-id/:id", handlers.GetCartByUserId)
-	// cart.Put("/add", handler)
+	cart.Post("/add", handlers.AddItemToCart)
+	cart.Delete("/delete", handlers.DeleteItemFromCart)
+	cart.Put("/update", handlers.UpdateItemAmount)
 
 	// order := api.Group("/orders")
 	// order.Post("/", handlers.CreateOrder)
@@ -48,6 +50,12 @@ func SetupRoutes(app *fiber.App) {
 	// order.Delete("/delete/:id", handlers.DeleteOrderById)
 
 	discount := api.Group("/discounts")
-	discount.Get("/", handlers.GetDiscounts)
+	discount.Get("/find-by-user/:id", handlers.GetDiscounts)
+	discount.Post("/add", handlers.AddCouponToUser) // 2 queries
 	discount.Get("/find-by-id/:id", handlers.GetDiscountById)
+	discount.Delete("/remove", handlers.RemoveCouponFromUser) // 2 queries discount_id and user_id
+	// for admin ? ? ?
+	discount.Delete("/delete/:id", handlers.DeleteCouponById)
+	discount.Put("/update/:id", handlers.UpdateCouponById)
+	discount.Post("/create", handlers.CreateCoupon)
 }

@@ -5,6 +5,7 @@ type CartDetail struct {
 	ProductID string
 	Amount    uint
 	Title     string
-	Price     uint
+	Price     float64
 	Image     []byte
+	MaxAmount uint
 }

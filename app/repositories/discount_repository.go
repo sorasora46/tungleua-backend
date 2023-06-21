@@ -37,3 +37,49 @@ func GetDiscounts(userID string) ([]models.Discount, error) {
 
 	return discounts, nil
 }
+
+// Delete coupon from everyone
+func DeleteCouponById(discountID string) error {
+	if err := utils.DB.Where("discount_id = ?", discountID).Delete(&models.UserDiscount{}); err.Error != nil {
+		return err.Error
+	}
+
+	if err := utils.DB.Where("id = ?", discountID).Delete(&models.Discount{}); err.Error != nil {
+		return err.Error
+	}
+
+	return nil
+}
+
+// Remove specific coupon from specific user
+func RemoveCouponFromUser(discountID string, userID string) error {
+	if err := utils.DB.Where("discount_id = ? AND user_id = ?", discountID, userID).Delete(&models.UserDiscount{}); err.Error != nil {
+		return err.Error
+	}
+
+	return nil
+}
+
+func UpdateCouponById(discountID string, updates map[string]interface{}) error {
+	if err := utils.DB.Model(&models.Discount{}).Where("id = ?", discountID).Updates(updates); err.Error != nil {
+		return err.Error
+	}
+
+	return nil
+}
+
+func CreateCoupon(discount *models.Discount) error {
+	if err := utils.DB.Create(discount); err.Error != nil {
+		return err.Error
+	}
+
+	return nil
+}
+
+func AddCouponToUser(userDiscount *models.UserDiscount) error {
+	if err := utils.DB.Create(userDiscount); err.Error != nil {
+		return err.Error
+	}
+
+	return nil
+}

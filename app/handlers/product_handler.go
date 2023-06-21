@@ -20,7 +20,7 @@ func CreateProduct(c *fiber.Ctx) error {
 	product.Amount = uint(req["amount"].(float64))
 	product.Description = req["description"].(string)
 	product.Image = []byte(req["image"].(string))
-	product.Price = uint(req["price"].(float64))
+	product.Price = req["price"].(float64)
 	product.StoreID = req["store_id"].(string)
 	product.Title = req["title"].(string)
 
