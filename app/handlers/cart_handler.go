@@ -32,6 +32,7 @@ func GetCartByUserId(c *fiber.Ctx) error {
 	return c.JSON(map[string]any{
 		"results": response,
 	})
+
 }
 
 func DeleteItemFromCart(c *fiber.Ctx) error {

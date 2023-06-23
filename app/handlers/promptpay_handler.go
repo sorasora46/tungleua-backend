@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"image"
 	"log"
+	"strconv"
 
 	"image/png"
 
@@ -16,9 +17,18 @@ import (
 
 func GeneratePromptPayQR(c *fiber.Ctx) error {
 
+	promptPayID := c.Query("PromptPayID")
+	amountStr := c.Query("Amount")
+
+	amount, err := strconv.ParseFloat(amountStr, 64)
+	if err != nil {
+		// Handle the error
+		log.Fatal(err)
+	}
+
 	payment := pp.PromptPay{
-		PromptPayID: "1709800370325",
-		Amount:      100.55,
+		PromptPayID: promptPayID,
+		Amount:      amount,
 	}
 
 	qrData, _ := payment.Gen()
