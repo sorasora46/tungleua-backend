@@ -1,12 +1,13 @@
 package models
 
 type User struct {
-	ID     string `gorm:"column:id;primaryKey;"`
-	Phone  string `gorm:"column:phone;not null"`
-	Image  []byte `gorm:"column:image"`
-	Email  string `gorm:"column:email;not null"`
-	IsShop bool   `gorm:"column:is_shop;not null"`
-	Name   string `gorm:"column:name;not null"`
+	ID      string  `gorm:"column:id;primaryKey;"`
+	Phone   string  `gorm:"column:phone;not null"`
+	Image   []byte  `gorm:"column:image"`
+	Email   string  `gorm:"column:email;not null"`
+	IsShop  bool    `gorm:"column:is_shop;not null"`
+	Name    string  `gorm:"column:name;not null"`
+	Balance float64 `gorm:"column:balance"`
 }
 
 // For Create User only!
