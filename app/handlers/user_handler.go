@@ -40,6 +40,7 @@ func GetUserById(c *fiber.Ctx) error {
 		"image":   string(user.Image),
 		"is_shop": user.IsShop,
 		"phone":   user.Phone,
+		"balance": user.Balance,
 	})
 }
 
