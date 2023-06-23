@@ -20,7 +20,8 @@ func main() {
 	})
 
 	routes.SetupRoutes(app)
-	app.Get("/p", handlers.GetCartByUserId)
+	app.Get("/gp", handlers.CreateOrder)
+	app.Post("/p", handlers.CreateOrder)
 
 	log.Fatal(app.Listen(":3000"))
 }

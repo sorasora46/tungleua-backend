@@ -1,11 +1,17 @@
 package repositories
 
 import (
+	"github.com/google/uuid"
 	"github.com/sorasora46/Tungleua-backend/app/models"
 	"github.com/sorasora46/Tungleua-backend/app/utils"
 )
 
-func CreateOrder(order *models.Order) error {
+func CreateOrder(order *models.Order, userid string, status string) error {
+	id := uuid.New()
+
+	order.ID = id.String()
+	order.UserID = userid
+	order.PaymentStatus = status
 	result := utils.DB.Create(order)
 	if result.Error != nil {
 		return result.Error
