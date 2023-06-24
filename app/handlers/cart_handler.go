@@ -45,6 +45,15 @@ func DeleteItemFromCart(c *fiber.Ctx) error {
 
 	return nil
 }
+func DeleteAllItemFromCart(c *fiber.Ctx) error {
+	userID := c.Query("user_id")
+
+	if err := repositories.DeleteAllItemFromCart(userID); err != nil {
+		return err
+	}
+
+	return nil
+}
 
 func UpdateItemAmount(c *fiber.Ctx) error {
 	userID := c.Query("user_id")

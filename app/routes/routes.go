@@ -40,6 +40,7 @@ func SetupRoutes(app *fiber.App) {
 	cart.Get("/find-by-id/:id", handlers.GetCartByUserId)
 	cart.Post("/add", handlers.AddItemToCart)
 	cart.Delete("/delete", handlers.DeleteItemFromCart)
+	cart.Delete("/deleteAll", handlers.DeleteAllItemFromCart)
 	cart.Put("/update", handlers.UpdateItemAmount)
 
 	payment := api.Group("/payments")
