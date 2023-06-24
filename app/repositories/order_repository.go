@@ -37,24 +37,47 @@ func FindOrder(userid string) (string, error) {
 	if findOrderResult.Error != nil {
 		return "", findOrderResult.Error
 	}
-	// productIDs := make([]string, 0, len(cart))
+
 	price := 0.0
 	for _, item := range cart {
 		product := new(models.Product)
-		result2 := utils.DB.Select("price").Find(&product, "id = ?", item.ProductID)
 
+		result2 := utils.DB.Select("price").Find(&product, "id = ?", item.ProductID)
 		if result2.Error != nil {
 			return "", result2.Error
 		}
-
+		CreateOrders(&models.OrderProducts{}, item)
 		price += product.Price * float64(item.Amount)
 
 	}
+
 	fmt.Println(price)
 	str := GeneratePromptPayQR(price)
 
 	return str, nil
 }
+func CreateOrders(orderP *models.OrderProducts, item models.Cart) error {
+	Order := []models.Order{}
+	findOrderResult := utils.DB.Find(&Order, "user_id = ?", item.UserID)
+	if findOrderResult.Error != nil {
+		return findOrderResult.Error
+	}
+	for _, item := range Order {
+
+		orderP.OrderID = item.ID
+
+	}
+
+	orderP.ProductID = item.ProductID
+	orderP.Amount = item.Amount
+	result := utils.DB.Create(orderP)
+	if result.Error != nil {
+		return result.Error
+	}
+
+	return nil
+}
+
 func GeneratePromptPayQR(price float64) string {
 
 	payment := pp.PromptPay{
