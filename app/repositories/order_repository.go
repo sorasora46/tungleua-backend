@@ -1,17 +1,111 @@
 package repositories
 
 import (
+	"bytes"
+	"encoding/base64"
+	"fmt"
+	"image"
+	"log"
+
+	"github.com/google/uuid"
 	"github.com/sorasora46/Tungleua-backend/app/models"
 	"github.com/sorasora46/Tungleua-backend/app/utils"
+
+	"image/png"
+
+	pp "github.com/Frontware/promptpay"
+	"github.com/skip2/go-qrcode"
 )
 
-func CreateOrder(order *models.Order) error {
+func CreateOrder(order *models.Order, userid string) error {
+	id := uuid.New()
+
+	order.ID = id.String()
+	order.UserID = userid
+	order.PaymentStatus = "pending"
 	result := utils.DB.Create(order)
 	if result.Error != nil {
 		return result.Error
 	}
 
 	return nil
+}
+
+func FindOrder(userid string) (string, error) {
+	cart := []models.Cart{}
+	findOrderResult := utils.DB.Find(&cart, "user_id = ?", userid)
+	if findOrderResult.Error != nil {
+		return "", findOrderResult.Error
+	}
+
+	price := 0.0
+	for _, item := range cart {
+		product := new(models.Product)
+
+		result2 := utils.DB.Select("price").Find(&product, "id = ?", item.ProductID)
+		if result2.Error != nil {
+			return "", result2.Error
+		}
+		CreateOrders(&models.OrderProducts{}, item)
+		price += product.Price * float64(item.Amount)
+
+	}
+
+	fmt.Println(price)
+	str := GeneratePromptPayQR(price)
+
+	return str, nil
+}
+func CreateOrders(orderP *models.OrderProducts, item models.Cart) error {
+	Order := []models.Order{}
+	findOrderResult := utils.DB.Find(&Order, "user_id = ?", item.UserID)
+	if findOrderResult.Error != nil {
+		return findOrderResult.Error
+	}
+	for _, item := range Order {
+
+		orderP.OrderID = item.ID
+
+	}
+
+	orderP.ProductID = item.ProductID
+	orderP.Amount = item.Amount
+	result := utils.DB.Create(orderP)
+	if result.Error != nil {
+		return result.Error
+	}
+
+	return nil
+}
+
+func GeneratePromptPayQR(price float64) string {
+
+	payment := pp.PromptPay{
+		PromptPayID: "0959597702",
+		Amount:      price,
+	}
+
+	qrData, _ := payment.Gen()
+
+	qrCode, err := qrcode.Encode(qrData, qrcode.Medium, 256)
+	if err != nil {
+		log.Fatal(err)
+	}
+	qrImage, _, err := image.Decode(bytes.NewReader(qrCode))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	buffer := new(bytes.Buffer)
+	err = png.Encode(buffer, qrImage)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	base64Str := base64.StdEncoding.EncodeToString(buffer.Bytes())
+
+	return base64Str
+
 }
 
 // func GetOrderById(orderID string) (*models.OrderDetail, error) {

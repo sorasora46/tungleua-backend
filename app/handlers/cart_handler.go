@@ -32,6 +32,7 @@ func GetCartByUserId(c *fiber.Ctx) error {
 	return c.JSON(map[string]any{
 		"results": response,
 	})
+
 }
 
 func DeleteItemFromCart(c *fiber.Ctx) error {
@@ -39,6 +40,15 @@ func DeleteItemFromCart(c *fiber.Ctx) error {
 	productID := c.Query("product_id")
 
 	if err := repositories.DeleteItemFromCart(userID, productID); err != nil {
+		return err
+	}
+
+	return nil
+}
+func DeleteAllItemFromCart(c *fiber.Ctx) error {
+	userID := c.Query("user_id")
+
+	if err := repositories.DeleteAllItemFromCart(userID); err != nil {
 		return err
 	}
 

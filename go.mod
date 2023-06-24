@@ -11,6 +11,7 @@ require (
 	cloud.google.com/go/longrunning v0.4.1 // indirect
 	cloud.google.com/go/storage v1.28.1 // indirect
 	firebase.google.com/go v3.13.0+incompatible // indirect
+	github.com/Frontware/promptpay v0.0.0-20201011053948-0c839c6b4342
 	github.com/andybalholm/brotli v1.0.5 // indirect
 	github.com/bep/godartsass v1.2.0 // indirect
 	github.com/bep/golibsass v1.1.1 // indirect
@@ -48,6 +49,7 @@ require (
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/savsgio/dictpool v0.0.0-20221023140959-7bf2e61cea94 // indirect
 	github.com/savsgio/gotils v0.0.0-20230208104028-c358bd845dee // indirect
+	github.com/skip2/go-qrcode v0.0.0-20200617195104-da1b6568686e
 	github.com/spf13/afero v1.9.5 // indirect
 	github.com/spf13/cast v1.5.1 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect

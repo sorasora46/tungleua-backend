@@ -42,6 +42,13 @@ func DeleteItemFromCart(userID string, productID string) error {
 
 	return nil
 }
+func DeleteAllItemFromCart(userID string) error {
+	if err := utils.DB.Where("user_id = ?", userID).Delete(&models.Cart{}); err.Error != nil {
+		return err.Error
+	}
+
+	return nil
+}
 
 // newAmount was calculated from the frontend
 // This function is used for both decrement and increment
