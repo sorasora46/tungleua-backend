@@ -8,14 +8,18 @@ import (
 
 func CreateOrder(c *fiber.Ctx) error {
 	order := new(models.Order)
-	userid := c.Query("user_id")
-	status := c.Query("payment_status")
-
-	err := repositories.CreateOrder(order, userid, status)
+	userID := c.Params("id")
+	err := repositories.CreateOrder(order, userID)
 	if err != nil {
 		return err
 	}
 
+	result, errs := repositories.FindOrder(userID)
+	if errs != nil {
+		return errs
+	} else {
+		c.SendString(result)
+	}
 	return nil
 }
 

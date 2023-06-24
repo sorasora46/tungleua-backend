@@ -1,23 +1,88 @@
 package repositories
 
 import (
+	"bytes"
+	"encoding/base64"
+	"fmt"
+	"image"
+	"log"
+
 	"github.com/google/uuid"
 	"github.com/sorasora46/Tungleua-backend/app/models"
 	"github.com/sorasora46/Tungleua-backend/app/utils"
+
+	"image/png"
+
+	pp "github.com/Frontware/promptpay"
+	"github.com/skip2/go-qrcode"
 )
 
-func CreateOrder(order *models.Order, userid string, status string) error {
+func CreateOrder(order *models.Order, userid string) error {
 	id := uuid.New()
 
 	order.ID = id.String()
 	order.UserID = userid
-	order.PaymentStatus = status
+	order.PaymentStatus = "pending"
 	result := utils.DB.Create(order)
 	if result.Error != nil {
 		return result.Error
 	}
 
 	return nil
+}
+
+func FindOrder(userid string) (string, error) {
+	cart := []models.Cart{}
+	findOrderResult := utils.DB.Find(&cart, "user_id = ?", userid)
+	if findOrderResult.Error != nil {
+		return "", findOrderResult.Error
+	}
+	// productIDs := make([]string, 0, len(cart))
+	price := 0.0
+	for _, item := range cart {
+		product := new(models.Product)
+		result2 := utils.DB.Select("price").Find(&product, "id = ?", item.ProductID)
+
+		if result2.Error != nil {
+			return "", result2.Error
+		}
+
+		price += product.Price * float64(item.Amount)
+
+	}
+	fmt.Println(price)
+	str := GeneratePromptPayQR(price)
+
+	return str, nil
+}
+func GeneratePromptPayQR(price float64) string {
+
+	payment := pp.PromptPay{
+		PromptPayID: "0959597702",
+		Amount:      price,
+	}
+
+	qrData, _ := payment.Gen()
+
+	qrCode, err := qrcode.Encode(qrData, qrcode.Medium, 256)
+	if err != nil {
+		log.Fatal(err)
+	}
+	qrImage, _, err := image.Decode(bytes.NewReader(qrCode))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	buffer := new(bytes.Buffer)
+	err = png.Encode(buffer, qrImage)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	base64Str := base64.StdEncoding.EncodeToString(buffer.Bytes())
+
+	return base64Str
+
 }
 
 // func GetOrderById(orderID string) (*models.OrderDetail, error) {

@@ -4,7 +4,6 @@ import (
 	"log"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/sorasora46/Tungleua-backend/app/handlers"
 	"github.com/sorasora46/Tungleua-backend/app/routes"
 	"github.com/sorasora46/Tungleua-backend/app/utils"
 	"github.com/sorasora46/Tungleua-backend/config"
@@ -20,8 +19,6 @@ func main() {
 	})
 
 	routes.SetupRoutes(app)
-	app.Get("/gp", handlers.CreateOrder)
-	app.Post("/p", handlers.CreateOrder)
 
 	log.Fatal(app.Listen(":3000"))
 }
