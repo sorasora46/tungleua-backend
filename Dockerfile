@@ -17,7 +17,7 @@ COPY . .
 RUN go build -o main .
 
 # Expose the port on which the API will listen
-EXPOSE 8080
+EXPOSE 3000
 
 # Set the entry point for the container
 CMD ["./main"]
