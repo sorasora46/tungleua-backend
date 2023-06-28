@@ -3,9 +3,11 @@ package repositories
 import (
 	"bytes"
 	"encoding/base64"
+	"encoding/json"
 	"fmt"
 	"image"
 	"log"
+	"strconv"
 
 	"github.com/google/uuid"
 	"github.com/sorasora46/Tungleua-backend/app/models"
@@ -29,6 +31,137 @@ func CreateOrder(order *models.Order, userid string) error {
 	}
 
 	return nil
+}
+func TopUp(userid string, amount string) (string, error) {
+	order := new(models.Order)
+	id := uuid.New()
+
+	order.ID = id.String()
+	order.UserID = userid
+	order.PaymentStatus = "pending"
+	result := utils.DB.Create(order)
+	if result.Error != nil {
+		return "", result.Error
+	}
+
+	amountValue, err := strconv.ParseFloat(amount, 64)
+	if err != nil {
+		return "", err
+	}
+	user := models.User{}
+	if err := utils.DB.First(&user, "id = ?", userid).Error; err != nil {
+		return "", err
+	}
+
+	if order.PaymentStatus == "pending" {
+		GeneratePromptPayQR(amountValue)
+		fmt.Print("pending")
+	} else {
+
+		user.Balance += amountValue
+
+	}
+
+	if err := utils.DB.Save(&user).Error; err != nil {
+		return "", err
+	}
+
+	return "", nil
+}
+func FindOrder2(userid string) (string, error) {
+	cart := []models.Cart{}
+	Order := models.Order{}
+	findOrderResult := utils.DB.Find(&cart, "user_id = ?", userid)
+	if findOrderResult.Error != nil {
+		return "", findOrderResult.Error
+	}
+	findUserOrder := utils.DB.Find(&Order, "user_id = ?", userid)
+	if findUserOrder.Error != nil {
+		return "", findUserOrder.Error
+	}
+
+	price := 0.0
+	for _, item := range cart {
+		product := new(models.Product)
+
+		result2 := utils.DB.Select("price").Find(&product, "id = ?", item.ProductID)
+		if result2.Error != nil {
+			return "", result2.Error
+		}
+		CreateOrders(&models.OrderProducts{}, item)
+		price += product.Price * float64(item.Amount)
+
+	}
+
+	balance := 0.0
+
+	User := new(models.User)
+
+	result2 := utils.DB.Select("balance").Find(&User, "id = ?", Order.UserID)
+	if result2.Error != nil {
+		return "", result2.Error
+	}
+
+	balance = User.Balance
+
+	total := balance - price
+
+	if balance >= price {
+
+		User := new(models.User)
+		result2 := utils.DB.Model(&User).Where("id = ?", userid).Update("balance", total)
+		if result2.Error != nil {
+			return "", result2.Error
+		}
+
+		result := utils.DB.Model(&Order).Where("id = ?", Order.ID).Update("payment_status", "Success")
+		if result.Error != nil {
+			return "", result.Error
+		}
+
+		message := "Payment was success"
+		Balance := "Your Balance " + strconv.Itoa(int(total)) + " left"
+		responseMap := map[string]string{
+			"message": message,
+			"Balance": Balance,
+		}
+		jsonData, err := json.Marshal(responseMap)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		return string(jsonData), nil
+
+	} else {
+
+		if total < 0 {
+			total = -total
+		}
+		User := new(models.User)
+		result2 := utils.DB.Model(&User).Where("id = ?", userid).Update("balance", 0)
+		if result2.Error != nil {
+			return "", result2.Error
+		}
+		message := "Not enough balance Please topup"
+		Balance := strconv.Itoa(int(total))
+		image := GeneratePromptPayQR(total)
+
+		responseMap := map[string]string{
+			"message": message,
+			"Balance": Balance,
+			"image":   image,
+		}
+		jsonData, err := json.Marshal(responseMap)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		fmt.Println(User.Balance)
+
+		return string(jsonData), nil
+
+	}
+
 }
 
 func FindOrder(userid string) (string, error) {
@@ -77,7 +210,6 @@ func CreateOrders(orderP *models.OrderProducts, item models.Cart) error {
 
 	return nil
 }
-
 func GeneratePromptPayQR(price float64) string {
 
 	payment := pp.PromptPay{
