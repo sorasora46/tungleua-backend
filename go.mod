@@ -3,6 +3,12 @@ module github.com/sorasora46/Tungleua-backend
 go 1.20
 
 require (
+	github.com/Frontware/promptpay v0.0.0-20201011053948-0c839c6b4342
+	github.com/gofiber/fiber v1.14.6
+	github.com/skip2/go-qrcode v0.0.0-20200617195104-da1b6568686e
+)
+
+require (
 	cloud.google.com/go v0.110.0 // indirect
 	cloud.google.com/go/compute v1.19.0 // indirect
 	cloud.google.com/go/compute/metadata v0.2.3 // indirect
@@ -11,7 +17,6 @@ require (
 	cloud.google.com/go/longrunning v0.4.1 // indirect
 	cloud.google.com/go/storage v1.28.1 // indirect
 	firebase.google.com/go v3.13.0+incompatible // indirect
-	github.com/Frontware/promptpay v0.0.0-20201011053948-0c839c6b4342
 	github.com/andybalholm/brotli v1.0.5 // indirect
 	github.com/bep/godartsass v1.2.0 // indirect
 	github.com/bep/golibsass v1.1.1 // indirect
@@ -21,6 +26,7 @@ require (
 	github.com/fatih/color v1.15.0 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/gofiber/fiber/v2 v2.46.0 // indirect
+	github.com/gofiber/utils v0.0.10 // indirect
 	github.com/gohugoio/hugo v0.113.0 // indirect
 	github.com/golang-jwt/jwt/v5 v5.0.0 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
@@ -30,6 +36,7 @@ require (
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.2.3 // indirect
 	github.com/googleapis/gax-go/v2 v2.8.0 // indirect
+	github.com/gorilla/schema v1.1.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/imdario/mergo v0.3.16 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
@@ -49,7 +56,6 @@ require (
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/savsgio/dictpool v0.0.0-20221023140959-7bf2e61cea94 // indirect
 	github.com/savsgio/gotils v0.0.0-20230208104028-c358bd845dee // indirect
-	github.com/skip2/go-qrcode v0.0.0-20200617195104-da1b6568686e
 	github.com/spf13/afero v1.9.5 // indirect
 	github.com/spf13/cast v1.5.1 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect

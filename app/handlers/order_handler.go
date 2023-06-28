@@ -22,6 +22,35 @@ func CreateOrder(c *fiber.Ctx) error {
 	}
 	return nil
 }
+func TopUp(c *fiber.Ctx) error {
+
+	userID := c.Params("id")
+	amount := c.Params("amount")
+	result, err := repositories.TopUp(userID, amount)
+	if err != nil {
+		return err
+	} else {
+		c.SendString(result)
+	}
+
+	return nil
+}
+func CreateOrder2(c *fiber.Ctx) error {
+	order := new(models.Order)
+	userID := c.Params("id")
+	err := repositories.CreateOrder(order, userID)
+	if err != nil {
+		return err
+	}
+
+	result, errs := repositories.FindOrder2(userID)
+	if errs != nil {
+		return errs
+	} else {
+		c.SendString(result)
+	}
+	return nil
+}
 
 // func GetOrderById(c *fiber.Ctx) error {
 // 	orderID := c.Params("id")
