@@ -48,10 +48,11 @@ func SetupRoutes(app *fiber.App) {
 	payment.Post("/user/:id/amount/:amount", handlers.TopUp)
 	payment.Post("/user/:id", handlers.CreateOrder)
 	payment.Get("/Get", handlers.CreateOrder)
+
 	payment.Post("/payWallet/:id", handlers.CreateOrder2)
 	// order := api.Group("/orders")
-	// order.Post("/user", handlers.CreateOrder)
-	// order.Get("/Get", handlers.CreateOrder)
+	// // order.Post("/user", handlers.CreateOrder)
+	// order.Get("/GetAllOrder", handlers.GetOrders)
 	// order.Get("/find-by-user/:id", handlers.GetOrders)
 	// order.Put("/update/:id", handlers.UpdateOrderStatus)
 	// order.Delete("/delete/:id", handlers.DeleteOrderById)
