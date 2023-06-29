@@ -9,12 +9,14 @@ import (
 func CreateOrder(c *fiber.Ctx) error {
 	order := new(models.Order)
 	userID := c.Params("id")
+	couponID := c.Query("coupon_id")
+
 	err := repositories.CreateOrder(order, userID)
 	if err != nil {
 		return err
 	}
 
-	result, errs := repositories.FindOrder(userID)
+	result, errs := repositories.FindOrder(userID, couponID)
 	if errs != nil {
 		return errs
 	} else {
@@ -38,12 +40,14 @@ func TopUp(c *fiber.Ctx) error {
 func CreateOrder2(c *fiber.Ctx) error {
 	order := new(models.Order)
 	userID := c.Params("id")
+	couponID := c.Query("coupon_id")
+
 	err := repositories.CreateOrder(order, userID)
 	if err != nil {
 		return err
 	}
 
-	result, errs := repositories.FindOrder2(userID)
+	result, errs := repositories.FindOrder2(userID, couponID)
 	if errs != nil {
 		return errs
 	} else {
@@ -76,14 +80,12 @@ func CreateOrder2(c *fiber.Ctx) error {
 // }
 
 // func GetOrders(c *fiber.Ctx) error {
-// 	userID := c.Params("id")
-
-// 	orders, err := repositories.GetOrders(userID)
+// 	orders, err := repositories.GetOrders2()
 // 	if err != nil {
 // 		return err
 // 	}
 
-// 	return c.JSON(map[string][]models.OrderDetail{
+// 	return c.JSON(map[string][]*models.Order{
 // 		"orders": orders,
 // 	})
 // }

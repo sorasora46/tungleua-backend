@@ -24,6 +24,7 @@ func CreateOrder(order *models.Order, userid string) error {
 
 	order.ID = id.String()
 	order.UserID = userid
+
 	order.PaymentStatus = "pending"
 	result := utils.DB.Create(order)
 	if result.Error != nil {
@@ -68,7 +69,8 @@ func TopUp(userid string, amount string) (string, error) {
 
 	return "", nil
 }
-func FindOrder2(userid string) (string, error) {
+
+func FindOrder2(userid string, couponID string) (string, error) {
 	cart := []models.Cart{}
 	Order := models.Order{}
 	findOrderResult := utils.DB.Find(&cart, "user_id = ?", userid)
@@ -104,12 +106,24 @@ func FindOrder2(userid string) (string, error) {
 
 	balance = User.Balance
 
-	total := balance - price
+	discount := 0.0
 
-	if balance >= price {
+	if couponID != "" {
+		discounts := []models.Discount{}
+		findDiscount := utils.DB.Select("discount").Find(&discounts, "id = ?", couponID)
+		if findDiscount.Error != nil {
+			return "", findDiscount.Error
+		}
+		for _, item := range discounts {
+			discount += item.Discount
+		}
+	}
+	fmt.Println(discount)
 
+	if balance >= price-discount*price {
+		fmt.Println(balance - (price - discount*price))
 		User := new(models.User)
-		result2 := utils.DB.Model(&User).Where("id = ?", userid).Update("balance", total)
+		result2 := utils.DB.Model(&User).Where("id = ?", userid).Update("balance", balance-(price-discount*price))
 		if result2.Error != nil {
 			return "", result2.Error
 		}
@@ -120,7 +134,7 @@ func FindOrder2(userid string) (string, error) {
 		}
 
 		message := "Payment was success"
-		Balance := "Your Balance " + strconv.Itoa(int(total)) + " left"
+		Balance := "Your Balance " + strconv.Itoa(int(balance-(price-discount*price))) + " left"
 		responseMap := map[string]string{
 			"message": message,
 			"Balance": Balance,
@@ -133,18 +147,17 @@ func FindOrder2(userid string) (string, error) {
 		return string(jsonData), nil
 
 	} else {
-
-		if total < 0 {
-			total = -total
+		fin := price - discount*price
+		fin2 := balance - fin
+		if fin2 < 0 {
+			fin2 = -fin2
 		}
+		fmt.Print(fin2)
 		User := new(models.User)
-		result2 := utils.DB.Model(&User).Where("id = ?", userid).Update("balance", 0)
-		if result2.Error != nil {
-			return "", result2.Error
-		}
+
 		message := "Not enough balance Please topup"
-		Balance := strconv.Itoa(int(total))
-		image := GeneratePromptPayQR(total)
+		Balance := strconv.Itoa(int(fin2))
+		image := GeneratePromptPayQR(fin2)
 
 		responseMap := map[string]string{
 			"message": message,
@@ -164,13 +177,13 @@ func FindOrder2(userid string) (string, error) {
 
 }
 
-func FindOrder(userid string) (string, error) {
+func FindOrder(userid string, couponID string) (string, error) {
 	cart := []models.Cart{}
+
 	findOrderResult := utils.DB.Find(&cart, "user_id = ?", userid)
 	if findOrderResult.Error != nil {
 		return "", findOrderResult.Error
 	}
-
 	price := 0.0
 	for _, item := range cart {
 		product := new(models.Product)
@@ -183,12 +196,45 @@ func FindOrder(userid string) (string, error) {
 		price += product.Price * float64(item.Amount)
 
 	}
+	dis := 0.0
+	discount := 0.0
+	if couponID != "" {
+		discounts := []models.Discount{}
+		findDiscount := utils.DB.Select("discount").Find(&discounts, "id = ?", couponID)
+		if findDiscount.Error != nil {
+			return "", findDiscount.Error
+		}
+		for _, item := range discounts {
+			fmt.Print(item.Discount)
+			discount += item.Discount
+		}
+		dis += (price * discount)
 
-	fmt.Println(price)
+		str := GeneratePromptPayQR(price - dis)
+		responseMap := map[string]string{
+			"message": "Your Order is " + strconv.Itoa(int(price-dis)) + " Bath",
+			"image":   str,
+		}
+		jsonData, err := json.Marshal(responseMap)
+		if err != nil {
+			log.Fatal(err)
+		}
+		return string(jsonData), nil
+
+	}
 	str := GeneratePromptPayQR(price)
+	responseMap := map[string]string{
+		"message": "Your Order is " + strconv.Itoa(int(price)) + " Bath",
+		"image":   str,
+	}
+	jsonData, err := json.Marshal(responseMap)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return string(jsonData), nil
 
-	return str, nil
 }
+
 func CreateOrders(orderP *models.OrderProducts, item models.Cart) error {
 	Order := []models.Order{}
 	findOrderResult := utils.DB.Find(&Order, "user_id = ?", item.UserID)
@@ -271,40 +317,27 @@ func GeneratePromptPayQR(price float64) string {
 // 	return &order_detail, nil
 // }
 
-// func GetOrders(userID string) ([]models.OrderDetail, error) {
-// 	orders := make([]models.Order, 0)
-// 	orderDetails := make([]models.OrderDetail, 0)
+// func GetOrders2() ([]*models.Order, error) {
+// 	orders := []models.Order{}
 
-// 	orderResult := utils.DB.Find(&orders, "user_id = ?", userID)
+// 	orderResult := utils.DB.Find(&orders)
 // 	if orderResult.Error != nil {
 // 		return nil, orderResult.Error
 // 	}
 
-// 	for _, order := range orders {
-// 		product := new(models.Product)
-// 		productResult := utils.DB.Find(&product, "id = ?", order.ProductID)
-// 		if productResult.Error != nil {
-// 			return nil, productResult.Error
-// 		}
+// 	allOrders := make([]*models.Order, len(orders))
 
-// 		orderDetail := models.OrderDetail{
+// 	for i, order := range orders {
+// 		user := new(models.User)
+// 		allOrders[i] = &models.Order{
 // 			ID:            order.ID,
 // 			UserID:        order.UserID,
-// 			ProductID:     order.ProductID,
-// 			StoreID:       product.StoreID,
-// 			Title:         product.Title,
-// 			Description:   product.Description,
-// 			Image:         product.Image,
-// 			Price:         product.Price,
 // 			CreatedAt:     order.CreatedAt,
 // 			PaymentStatus: order.PaymentStatus,
-// 			Amount:        order.Amount,
 // 		}
-
-// 		orderDetails = append(orderDetails, orderDetail)
 // 	}
 
-// 	return orderDetails, nil
+// 	return allOrders, nil
 // }
 
 func DeleteOrderById(userID string) error {
