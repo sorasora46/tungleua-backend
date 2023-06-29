@@ -3,7 +3,7 @@ name: Go CI/CD with Docker
 on:
   push:
     branches:
-      - main
+      - infrastructure
   pull_request:
     branches:
       - main
